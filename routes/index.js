@@ -40,11 +40,13 @@ router.post('/register', function (req, res) {
 })
 
 router.post('/login', function (req, res) {
+  console.log('sss',req,res,'uuu')
   let { username, password } = req.body
   res.setHeader('Content-Type', 'application/json');
   res.setHeader('Cookie', ['type=ninja', 'language=javascript']);
   mysql.table('userinfo').where({ username, password }).find()
     .then(function (data) {
+      console.log(data)
       if (data.id) {
         res.cookie('user_id', data.id, { maxAge: 1000 * 60 * 24 * 24 })
         res.send({ code: 1, msg: '登录成功', user_id: data.id, identity: data.identity, username: data.username, isbeauty: data.isbeauty })
