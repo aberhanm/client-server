@@ -16,11 +16,9 @@ router.post('/register', function (req, res) {
     //SELECT * FROM table;
     mysql.table('userinfo').field('username').where({ username }).select()
       .then(function (data) {
-        console.log(data)
         if (data.length) {
           res.send({ code: 0, msg: '注册失败,用户已存在' })
         } else {
-          console.log('s')
           mysql.table('userinfo').add({ username, password, identity })
             .then(function (UserId) {
               //如果插入成功，返回插入的id
@@ -40,13 +38,11 @@ router.post('/register', function (req, res) {
 })
 
 router.post('/login', function (req, res) {
-  console.log('sss',req,res,'uuu')
   let { username, password } = req.body
   res.setHeader('Content-Type', 'application/json');
   res.setHeader('Cookie', ['type=ninja', 'language=javascript']);
   mysql.table('userinfo').where({ username, password }).find()
     .then(function (data) {
-      console.log(data)
       if (data.id) {
         res.cookie('user_id', data.id, { maxAge: 1000 * 60 * 24 * 24 })
         res.send({ code: 1, msg: '登录成功', user_id: data.id, identity: data.identity, username: data.username, isbeauty: data.isbeauty })
@@ -55,7 +51,6 @@ router.post('/login', function (req, res) {
       }
     })
     .catch(function (e) {
-      console.log(e);
     });
 })
 

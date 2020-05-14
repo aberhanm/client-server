@@ -9,7 +9,17 @@ router.post('/userDetail', function (req, res, next) {
   mysql.table('userinfo').where({ id: user_id }).update({ nickname, position, head, desc, isbeauty, company, birth, gender, exprience, age, salary, gratuated, address, email, mobile })
     .then(success => {
       if (success) {
-        res.send({ code: 1, msg: '信息添加成功' })
+        if (company) {
+          mysql.table('companys').add({ user_id, company, ceo: nickname, mobile, email, address })
+            .then(insertId => {
+              if (insertId) {
+                res.send({ code: 1, msg: '信息添加成功', user_id, isbeauty, org_id: insertId })
+              }
+            })
+        } else {
+          res.send({ code: 1, msg: '信息添加成功', user_id, isbeauty })
+        }
+
       } else {
         res.send({ code: 0, msg: '信息添加失败', success })
       }
@@ -23,9 +33,29 @@ router.get('/getuser', function (req, res) {
   if (!user_id) {
     res.send({ code: 0, msg: '请登录' })
   } else {
-    mysql.table('userinfo').where({ id: user_id }).select()
+    mysql.table('userinfo').where({ id: user_id }).find()
       .then(data => {
-        res.send({ code: 1, msg: '获取成功', data:data[0] })
+        console.log(data)
+        if (data.identity == 1) {
+          mysql.table('companys').where({ user_id }).find()
+            .then(data2 => {
+              if (data2) {
+                data['org_id'] = data2.id
+                console.log('hahahaha')
+                res.send({ code: 1, msg: '获取成功', data })
+              } else {
+                res.send({ code: 0, msg: '公司不存在' })
+              }
+            })
+            .catch(err => {
+              return new Error(err)
+            })
+        } else {
+          res.send({ code: 1, msg: '获取成功', data })
+        }
+      })
+      .catch(err => {
+        return new Error(err)
       })
   }
 
