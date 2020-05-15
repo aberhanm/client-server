@@ -13,11 +13,11 @@ router.post('/userDetail', function (req, res, next) {
           mysql.table('companys').add({ user_id, company, ceo: nickname, mobile, email, address })
             .then(insertId => {
               if (insertId) {
-                res.send({ code: 1, msg: '信息添加成功', user_id, isbeauty, org_id: insertId })
+                res.send({ code: 1, msg: '信息添加成功', id:user_id, isbeauty, org_id: insertId })
               }
             })
         } else {
-          res.send({ code: 1, msg: '信息添加成功', user_id, isbeauty })
+          res.send({ code: 1, msg: '信息添加成功', id:user_id, isbeauty, })
         }
 
       } else {
