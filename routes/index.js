@@ -23,7 +23,7 @@ router.post('/register', function (req, res) {
             .then(function (UserId) {
               //如果插入成功，返回插入的id
               res.cookie('user_id', UserId, { maxAge: 1000 * 60 * 24 * 24 })
-              res.send({ code: 1, msg: '注册成功', user_id: UserId })
+              res.send({ code: 1, msg: '注册成功', user_id: UserId,identity })
             })
             .catch(function (err) {
               //插入失败，err为具体的错误信息
