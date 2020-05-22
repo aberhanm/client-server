@@ -14,7 +14,8 @@
     "mongodb": "^3.5.7",
     "morgan": "~1.9.1",
     "node-mysql-promise": "0.0.7",
-    "pug": "2.0.0-beta11"
+    "pug": "2.0.0-beta11",
+    "socket.io": "^2.3.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.3"

@@ -5,7 +5,6 @@ let mysql = require('../db/db_test')
 /* GET users listing. */
 router.post('/userDetail', function (req, res, next) {
   let obj = { position, head, desc, user_id, company, birth, gender, exprience, age, salary, gratuated, address, email, mobile, nickname } = req.body
-  console.log(obj)
   let isbeauty = 1
   mysql.table('userinfo').where({ id: user_id }).update({ nickname, position, head, desc, isbeauty, company, birth, gender, exprience, age, salary, gratuated, address, email, mobile })
     .then(success => {
@@ -14,7 +13,6 @@ router.post('/userDetail', function (req, res, next) {
         if (company) {
           mysql.table('companys').add({ user_id, company, ceo: nickname, mobile, email, address })
             .then(insertId => {
-              console.log(insertId)
               if (insertId) {
                 obj.org_id = insertId
                 res.send({ code: 1, msg: '信息添加成功', data: obj })
@@ -45,7 +43,6 @@ router.get('/getuser', function (req, res) {
             .then(data2 => {
               if (data2) {
                 data['org_id'] = data2.id
-                console.log('hahahaha')
                 res.send({ code: 1, msg: '获取成功', data })
               } else {
                 res.send({ code: 0, msg: '公司不存在' })
@@ -84,19 +81,40 @@ router.post('/publishPosition', function (req, res) {
 })
 
 router.get('/getHomelist', function (req, res) {
-  let { identity } = req.body
+  let { identity } = req.query
   let { user_id } = req.cookies
   if (!user_id) {
     res.send({ code: 0, msg: '请登录' })
   } else {
-    mysql.table('positions').select().then(data => {
-      if (data.length) {
-        res.send({ code: 1, msg: '获取成功', data })
-      } else {
-        res.send({ code: 0, msg: '获取失败' })
-      }
 
-    })
+    if (identity == 0) {
+      mysql.table('positions').select().then(data => {
+        if (data.length) {
+          res.send({ code: 1, msg: '获取成功', data })
+        } else {
+          res.send({ code: 0, msg: '获取失败' })
+        }
+
+      }).catch(err => {
+        return new Error(err)
+      })
+    } else {
+      mysql.table('userinfo').where({ identity: 0 }).select().then(data => {
+        if (data.length) {
+          res.send({ code: 1, msg: '获取成功', data })
+        } else {
+          res.send({ code: 0, msg: '获取失败' })
+        }
+
+      }).catch(err => {
+        return new Error(err)
+      })
+    }
+
+    // }else{
+    //   res.send({ code: 0, msg: '获取失败,缺少参数' })
+    // }
+
 
   }
 })
