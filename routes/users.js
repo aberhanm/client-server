@@ -64,7 +64,7 @@ router.get('/getuser', function (req, res) {
 
 router.post('/publishPosition', function (req, res) {
   let { user_id } = req.cookies
-  let obj = { org_id, company, position, intro, category, experience, salary, education, address, recruiter, recruiterPosition } = req.body
+  let obj = { org_id, company, position, intro, category, experience, salary, education, address,recruiter_id:user_id, recruiter, recruiterPosition } = req.body
   if (!user_id) {
     res.send({ code: 0, msg: '请登录' })
   } else {

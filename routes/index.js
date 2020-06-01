@@ -59,21 +59,21 @@ router.get('/getchatList', function (req, res) {
   if (!user_id) {
     res.send({ code: 0, msg: '请登录' })
   } else {
-    mysql.table('userinfo').where({ identity: ['!=', 3] }).field(['id', 'username', 'head']).select()
+    mysql.table('userinfo').where({ identity: ['!=', 3] }).field(['id', 'username', 'nickname', 'head']).select()
       .then(result => {
         let users = {}
         if (result.length) {
           result.forEach(element => {
-            users[element.id] = { username: element.username, head: element.head }
+            users[element.id] = { username: element.username, nickname: element.nickname, head: element.head }
           });
-        }else{
-          res.send({code:0,msg:'用户获取失败',result})
+        } else {
+          res.send({ code: 0, msg: '用户获取失败', result })
         }
         mysql.table('messages').where({ from: user_id, to: user_id, _logic: 'OR' }).select().then(data => {
           if (data.length) {
-            res.send({ code: 1, msg: '消息列表获取成功', chats: { users, data } })
-          }else{
-            res.send({code:0,msg:'消息获取失败',data})
+            res.send({ code: 1, msg: '消息列表获取成功', data: { users, msgs: data } })
+          } else {
+            res.send({ code: 0, msg: '消息获取失败', data })
           }
         }).catch(err => {
           return new Error(err)

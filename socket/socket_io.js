@@ -7,11 +7,12 @@ module.exports = function (server) {
         const users={}
         socket.on('sendMsg', function (data) {
             let { from, to, msg } = data
+            console.log('totototot',to)
             // users[from]={user_id:from,socketID:socket.id}
             let chat_id=[from,to].sort().join('_')
             mysql.table('messages').add({from,to,chat_id,content:msg,create_time:Date.now()}).then(id=>{
                 if(id){
-                    io.emit('receiveMsg','哈哈哈哈哈哈哈哈哈')
+                    io.emit('receiveMsg',{id,from,to,chat_id,content:msg,create_time:Date.now()})
                 }
             })
             console.log("服务器接收：", data);
