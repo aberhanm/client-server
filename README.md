@@ -27,3 +27,8 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 The build is minified and the filenames include the hashes.<br />
 Your app is ready to be deployed!
+
+### mysql
+运行db文件夹下client.sql 数据库文件，
+
+
